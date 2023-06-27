@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:16-alpine as node 
+FROM node:16-alpine as node 
 
 RUN  apk update && apk add busybox-extras 
 
