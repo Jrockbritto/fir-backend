@@ -12,7 +12,7 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 3000
+EXPOSE ${APP_PORT}
 
 RUN chmod +x ./entrypoint.sh
 
