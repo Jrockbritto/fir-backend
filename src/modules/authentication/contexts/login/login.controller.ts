@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { addSeconds } from 'date-fns';
 import { Response } from 'express';
@@ -7,7 +7,10 @@ import { Response } from 'express';
 import { AUTHENTICATION } from '@config/constants/tags.constants';
 import env from '@config/env';
 
-import { LoginRequestDTO } from '@modules/authentication/dto/login.dto';
+import {
+  LoginRequestDTO,
+  LoginResponseDTO,
+} from '@modules/authentication/dto/login.dto';
 import { User } from '@modules/users/entity/User.entity';
 
 import { LoginService } from './login.service';
@@ -16,6 +19,7 @@ import { LoginService } from './login.service';
 @Controller(AUTHENTICATION.toLowerCase())
 export class LoginController {
   constructor(private readonly loginService: LoginService) {}
+  @ApiOkResponse({ type: LoginResponseDTO })
   @Post('/login')
   async handler(
     @Body() dto: LoginRequestDTO,
