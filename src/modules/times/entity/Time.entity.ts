@@ -1,47 +1,36 @@
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  OneToMany,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Time } from '@modules/times/entity/Time.entity';
+import { User } from '@modules/users/entity/User.entity';
 
-@Entity('users')
-export class User {
+@Entity('times')
+export class Time {
   @ApiProperty({
     example: '1f4ddf6f-2c11-4ba0-80cf-359d5bcd0711',
   })
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ApiProperty({
-    example: 'John',
-  })
-  @Column({ name: 'name' })
-  name: string;
+  @Column({ name: 'user_id' })
+  userId: string;
 
   @ApiProperty({
     example: 'Doe',
   })
-  @Column({ name: 'last_name' })
-  lastName: string;
-
   @ApiProperty({
-    example: 'email@email.com',
+    example: '2023-04-26T17:17:43.597Z',
   })
-  @Column({ name: 'email' })
-  email: string;
-
-  @ApiHideProperty()
-  @Column({ name: 'password' })
-  @Exclude()
-  password: string;
+  @Column({ name: 'time' })
+  time: Date;
 
   @ApiProperty({ example: new Date() })
   @CreateDateColumn({ name: 'created_at' })
@@ -55,6 +44,7 @@ export class User {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
 
-  @OneToMany(() => Time, (Time: Time) => Time.user)
-  times: Time[];
+  @ManyToOne(() => User, (user: User) => user.times)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 }

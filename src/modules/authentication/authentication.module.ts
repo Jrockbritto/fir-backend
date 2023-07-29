@@ -13,6 +13,7 @@ import { UserRepository } from '@modules/users/repositories/implementations/user
 
 import { LoginController } from './contexts/login/login.controller';
 import { LoginService } from './contexts/login/login.service';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { LoginService } from './contexts/login/login.service';
   providers: [
     LoginService,
     Logger,
+    JwtStrategy,
     { provide: USER_REPOSITORY, useClass: UserRepository },
     { provide: ENCRYPT_PROVIDER, useClass: BcryptProvider },
   ],
