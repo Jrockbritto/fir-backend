@@ -41,7 +41,7 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(process.env.APP_PORT);
+  await app.listen(process.env.APP_PORT, process.env.APP_HOST);
   logger.log(
     `Application is running on: ${await app.getUrl()} - Port: ${
       process.env.APP_PORT
