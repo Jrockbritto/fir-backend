@@ -1,4 +1,5 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException } from '@nestjs/common';
 import { sign } from 'jsonwebtoken';
 
 import { ENCRYPT_PROVIDER } from '@config/constants/providers.constants';
@@ -40,9 +41,16 @@ export class LoginService {
     if (!passwordMatched) {
       throw new UnauthorizedException('invalid-credentials');
     }
-    const token = sign({}, env().jwt.token, {
+
+    const JwtConfig = env().jwt;
+
+    if (!JwtConfig.token) {
+      throw new ForbiddenException();
+    }
+
+    const token = sign({}, JwtConfig.token, {
       subject: user.id,
-      expiresIn: env().jwt.expiresIn,
+      expiresIn: JwtConfig.expiresIn,
     });
 
     return { user, token };

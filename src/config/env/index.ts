@@ -1,6 +1,6 @@
 export default () => {
   return {
-    appPort: process.env.APP_PORT,
+    appPort: Number(process.env.APP_PORT),
     domain: process.env.DOMAIN,
     jwt: {
       expiresIn: process.env.JWT_EXPIRES_IN,

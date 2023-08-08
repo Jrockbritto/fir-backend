@@ -22,6 +22,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: JwtPayload) {
+    if (!payload.sub) {
+      throw new UnauthorizedException();
+    }
     const franchise = await this.userRepository.findById(payload.sub);
 
     if (!franchise) {

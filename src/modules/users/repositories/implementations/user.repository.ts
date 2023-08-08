@@ -17,11 +17,11 @@ export class UserRepository implements IUserRepository {
     return this.repository.save(user);
   }
 
-  findById(id: string): Promise<User> {
+  findById(id: string): Promise<User | null> {
     return this.repository.findOne({ where: { id } });
   }
 
-  findByEmail(email: string): Promise<User> {
+  findByEmail(email: string): Promise<User | null> {
     return this.repository.findOne({ where: { email } });
   }
 }

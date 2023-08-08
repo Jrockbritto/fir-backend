@@ -24,9 +24,12 @@ export class TimeRespository implements ITimeRepository {
     });
     return time;
   }
-  async delete(timeId: string): Promise<Time> {
+  async delete(timeId: string): Promise<Time | null> {
     const time = await this.repository.findOne({ where: { id: timeId } });
-    time.deletedAt = new Date();
-    return this.repository.save(time);
+    if (time) {
+      time.deletedAt = new Date();
+      return this.repository.save(time);
+    }
+    return null;
   }
 }

@@ -19,7 +19,10 @@ export class CreateTimeController {
   @Post()
   @UseGuards(JwtAuthGuard)
   async handler(@Body() dto: CreateTimeRequestDTO, @Req() req: Request) {
-    const time = await this.createTimeService.execute({ ...dto, userId: (req.user as User).id });
+    const time = await this.createTimeService.execute({
+      ...dto,
+      userId: (req.user as User).id,
+    });
     return { time: plainToInstance(Time, time) };
   }
 }
