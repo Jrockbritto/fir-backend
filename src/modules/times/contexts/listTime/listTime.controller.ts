@@ -1,5 +1,5 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { TIME } from '@config/constants/tags.constants';
 
@@ -9,6 +9,7 @@ import { DayTimeRecordsDTO } from '@modules/times/dto/types/dayTimeRecords.dto';
 
 import { ListTimeService } from './listTime.service';
 
+@ApiBearerAuth()
 @Controller(TIME.toLowerCase())
 @ApiTags(TIME)
 export class ListTimeController {

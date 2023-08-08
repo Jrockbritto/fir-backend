@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { Request } from 'express';
 
@@ -12,6 +12,7 @@ import { User } from '@modules/users/entity/User.entity';
 
 import { CreateTimeService } from './createTime.service';
 
+@ApiBearerAuth()
 @Controller(TIME.toLowerCase())
 @ApiTags(TIME)
 export class CreateTimeController {
