@@ -3,7 +3,7 @@ import { differenceInMilliseconds, format, intervalToDuration } from 'date-fns';
 
 import { TIME_REPOSITORY } from '@config/constants/repositories.constants';
 
-import { ListTimeDTO } from '@modules/times/dto/listTime.dto';
+import { ListTimePaginatedDTO } from '@modules/times/dto/listTimePaginated.dto';
 import { SerializedTimes } from '@modules/times/dto/types/serializedTimes.dto';
 import { TimeRespository } from '@modules/times/repositories/implementations/time.repository';
 
@@ -13,38 +13,42 @@ export class ListTimeService {
     @Inject(TIME_REPOSITORY)
     private readonly timeRepository: TimeRespository,
   ) {}
-  async execute({ id }: ListTimeDTO) {
-    const times = await this.timeRepository.find({ userId: id });
-    const serializedTimes: SerializedTimes = times.reduce((acc, { time }) => {
-      const timeKey = format(time, 'dd/MM/yyyy');
-      const timeWithoutTimeZone = time;
-      acc[timeKey]
-        ? acc[timeKey].push(timeWithoutTimeZone)
-        : (acc[timeKey] = [timeWithoutTimeZone]);
-      return acc;
-    }, {} as SerializedTimes);
-
-    const timeKeys = Object.keys(serializedTimes);
-    const datesAndTimes = timeKeys.map((timeKey) => {
-      let finish = 0;
-      const timeArray = serializedTimes[timeKey];
-      const iterations = Math.floor(timeArray.length / 2);
-
-      for (let i = 0; i < iterations; i++) {
-        finish += differenceInMilliseconds(
-          timeArray[2 * i + 1],
-          timeArray[2 * i],
-        );
-      }
-
-      const response = {
-        date: timeKey,
-        time: intervalToDuration({ start: 0, end: finish }),
-        timeArray,
-      };
-      return response;
+  async execute({ id, page = 1, perPage = 5 }: ListTimePaginatedDTO) {
+    const times = await this.timeRepository.findPaginated({
+      userId: id,
+      page,
+      perPage,
     });
+    // const serializedTimes: SerializedTimes = times.reduce((acc, { time }) => {
+    //   const timeKey = format(time, 'dd/MM/yyyy');
+    //   const timeWithoutTimeZone = time;
+    //   acc[timeKey]
+    //     ? acc[timeKey].push(timeWithoutTimeZone)
+    //     : (acc[timeKey] = [timeWithoutTimeZone]);
+    //   return acc;
+    // }, {} as SerializedTimes);
 
-    return datesAndTimes.reverse();
+    // const timeKeys = Object.keys(serializedTimes);
+    // const datesAndTimes = timeKeys.map((timeKey) => {
+    //   let finish = 0;
+    //   const timeArray = serializedTimes[timeKey];
+    //   const iterations = Math.floor(timeArray.length / 2);
+
+    //   for (let i = 0; i < iterations; i++) {
+    //     finish += differenceInMilliseconds(
+    //       timeArray[2 * i + 1],
+    //       timeArray[2 * i],
+    //     );
+    //   }
+
+    //   const response = {
+    //     date: timeKey,
+    //     time: intervalToDuration({ start: 0, end: finish }),
+    //     timeArray,
+    //   };
+    //   return response;
+    // });
+
+    // return datesAndTimes.reverse();
   }
 }

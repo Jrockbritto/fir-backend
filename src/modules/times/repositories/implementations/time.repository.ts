@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 
 import { ICreateTimeDTO } from '@modules/times/dto/ICreateTime.dto';
 import { IFindTimeDTO } from '@modules/times/dto/IFindTime.dto';
+import { IFindTimePaginatedDTO } from '@modules/times/dto/IFindTimePaginated.dto';
 import { Time } from '@modules/times/entity/Time.entity';
 
 import { ITimeRepository } from '../timeRepository.interface';
@@ -12,6 +13,15 @@ export class TimeRespository implements ITimeRepository {
     @InjectRepository(Time)
     private readonly repository: Repository<Time>,
   ) {}
+  async findPaginated({ userId }: IFindTimePaginatedDTO) {
+    const total = await this.repository
+      .createQueryBuilder('times')
+      .select(['Date(time)'])
+      .where({ userId })
+      .getMany();
+
+    console.log(total);
+  }
 
   async create({ userId, time }: ICreateTimeDTO): Promise<Time> {
     const timeEntity = this.repository.create({ userId, time });
