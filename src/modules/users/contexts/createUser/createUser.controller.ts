@@ -6,7 +6,7 @@ import { USER } from '@config/constants/tags.constants';
 
 import { JwtAuthGuard } from '@modules/authentication/guards/jwtAuth.guard';
 import { CreateUserDTO } from '@modules/users/dto/createUser.dto';
-import { CreateUserResponseDTO } from '@modules/users/dto/createUSerResponse.dto';
+import { CreateUserResponseDTO } from '@modules/users/dto/createUserResponse.dto';
 import { User } from '@modules/users/entity/User.entity';
 
 import { CreateUserService } from './createUser.service';
