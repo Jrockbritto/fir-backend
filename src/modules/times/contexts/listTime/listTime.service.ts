@@ -3,7 +3,7 @@ import { differenceInMilliseconds, format, intervalToDuration } from 'date-fns';
 
 import { TIME_REPOSITORY } from '@config/constants/repositories.constants';
 
-import { ListTimeDTO } from '@modules/times/dto/listTime.dto';
+import { ListTimePaginatedDTO } from '@modules/times/dto/listTimePaginated.dto';
 import { SerializedTimes } from '@modules/times/dto/types/serializedTimes.dto';
 import { TimeRespository } from '@modules/times/repositories/implementations/time.repository';
 
@@ -13,8 +13,12 @@ export class ListTimeService {
     @Inject(TIME_REPOSITORY)
     private readonly timeRepository: TimeRespository,
   ) {}
-  async execute({ id }: ListTimeDTO) {
-    const times = await this.timeRepository.find({ userId: id });
+  async execute({ id, page = 1, perPage = 5 }: ListTimePaginatedDTO) {
+    const times = await this.timeRepository.findPaginated({
+      userId: id,
+      page,
+      perPage,
+    });
     const serializedTimes: SerializedTimes = times.reduce((acc, { time }) => {
       const timeKey = format(time, 'dd/MM/yyyy');
       const timeWithoutTimeZone = time;
@@ -45,6 +49,6 @@ export class ListTimeService {
       return response;
     });
 
-    return datesAndTimes.reverse();
+    return datesAndTimes;
   }
 }
