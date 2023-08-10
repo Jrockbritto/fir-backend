@@ -14,7 +14,7 @@ export class ListTimeService {
     private readonly timeRepository: TimeRespository,
   ) {}
   async execute({ id, page = 1, perPage = 5 }: ListTimePaginatedDTO) {
-    const times = await this.timeRepository.findPaginated({
+    const { times, total } = await this.timeRepository.findPaginated({
       userId: id,
       page,
       perPage,
@@ -49,6 +49,6 @@ export class ListTimeService {
       return response;
     });
 
-    return datesAndTimes;
+    return { times: datesAndTimes, total };
   }
 }

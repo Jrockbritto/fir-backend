@@ -2,6 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { addDays } from 'date-fns';
 import { Between, Repository } from 'typeorm';
 
+import { FindPaginatedReturnDTO } from '@modules/times/dto/findPaginatedReturn.dto';
 import { ICreateTimeDTO } from '@modules/times/dto/ICreateTime.dto';
 import { IFindTimeDTO } from '@modules/times/dto/IFindTime.dto';
 import { IFindTimePaginatedDTO } from '@modules/times/dto/IFindTimePaginated.dto';
@@ -15,7 +16,11 @@ export class TimeRespository implements ITimeRepository {
     private readonly repository: Repository<Time>,
   ) {}
 
-  async findPaginated({ userId, page, perPage }: IFindTimePaginatedDTO) {
+  async findPaginated({
+    userId,
+    page,
+    perPage,
+  }: IFindTimePaginatedDTO): Promise<FindPaginatedReturnDTO> {
     const start = (page - 1) * perPage;
     const end = page * perPage - 1;
     const total: Array<{ date: Date }> = await this.repository.query(
@@ -28,8 +33,9 @@ export class TimeRespository implements ITimeRepository {
       [userId],
     );
 
-    if (start > total.length - 1) return [];
-    return this.repository.find({
+    if (start > total.length - 1) return { times: [], total: 0 };
+
+    const times = await this.repository.find({
       where: {
         time: Between(
           total[end]?.date || total[total.length - 1].date,
@@ -41,6 +47,7 @@ export class TimeRespository implements ITimeRepository {
         time: 'DESC',
       },
     });
+    return { times, total: total.length };
   }
 
   async create({ userId, time }: ICreateTimeDTO): Promise<Time> {

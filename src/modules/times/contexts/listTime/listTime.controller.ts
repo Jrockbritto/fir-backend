@@ -10,8 +10,8 @@ import { TIME } from '@config/constants/tags.constants';
 
 import { JwtAuthGuard } from '@modules/authentication/guards/jwtAuth.guard';
 import { ListTimeDTO } from '@modules/times/dto/listTime.dto';
+import { ListTimePaginatedResponseDTO } from '@modules/times/dto/listTimePaginatedResponse.dto';
 import { PaginationOptions } from '@modules/times/dto/paginationOptions.dto';
-import { DayTimeRecordsDTO } from '@modules/times/dto/types/dayTimeRecords.dto';
 
 import { ListTimeService } from './listTime.service';
 
@@ -21,7 +21,7 @@ import { ListTimeService } from './listTime.service';
 export class ListTimeController {
   constructor(private readonly listTimeService: ListTimeService) {}
   @Get('users/:id')
-  @ApiOkResponse({ type: [DayTimeRecordsDTO] })
+  @ApiOkResponse({ type: ListTimePaginatedResponseDTO })
   @UseGuards(JwtAuthGuard)
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'perPage', required: false, type: Number })
