@@ -31,7 +31,7 @@ export class ListTimeService {
     const timeKeys = Object.keys(serializedTimes);
     const datesAndTimes = timeKeys.map((timeKey) => {
       let finish = 0;
-      const timeArray = serializedTimes[timeKey];
+      const timeArray = serializedTimes[timeKey].reverse();
       const iterations = Math.floor(timeArray.length / 2);
 
       for (let i = 0; i < iterations; i++) {
